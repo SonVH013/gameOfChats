@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Firebase
 
 class LoginController: UIViewController {
     
@@ -26,6 +27,8 @@ class LoginController: UIViewController {
         btn.backgroundColor = UIColor.cyan
         btn.layer.cornerRadius = 5
         btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.addTarget(self, action: #selector(btnRegisterTouched), for: .touchUpInside)
+        
         return btn
     }()
     
@@ -143,5 +146,24 @@ extension LoginController {
         emailSeperator.topAnchor.constraint(equalTo: emailTf.bottomAnchor, constant: 0).isActive = true
         emailSeperator.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
         emailSeperator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+    }
+    
+    @objc private func btnRegisterTouched() {
+        print("registered")
+        Auth.auth().createUser(withEmail: emailTf.text!, password: passTf.text!) { (user, err) in
+            if let error = err {
+                print(error)
+            }
+            //save to db
+            var uid = ""
+            let ref = Database.database().reference(fromURL: "https://gameofchats-dcb8a.firebaseio.com/")
+            if let user = Auth.auth().currentUser {
+                uid = user.uid
+            }
+            let childRef = ref.child("users").child(uid)
+            let value = ["name": self.nameTf.text!, "email": self.emailTf.text!, "password": self.passTf.text!]
+            childRef.updateChildValues(value)
+        }
+        
     }
 }
