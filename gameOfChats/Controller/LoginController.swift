@@ -27,8 +27,7 @@ class LoginController: UIViewController {
         btn.backgroundColor = UIColor.cyan
         btn.layer.cornerRadius = 5
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.addTarget(self, action: #selector(btnRegisterTouched), for: .touchUpInside)
-        
+        btn.addTarget(self, action: #selector(handlerLoginRegister), for: .touchUpInside)
         return btn
     }()
     
@@ -69,15 +68,31 @@ class LoginController: UIViewController {
         return view
     }()
     
+    let segmentedControl: UISegmentedControl = {
+        let segment = UISegmentedControl(items: ["Login", "Register"])
+        segment.translatesAutoresizingMaskIntoConstraints = false
+        segment.tintColor = UIColor.white
+        segment.selectedSegmentIndex = 1
+        segment.addTarget(self, action: #selector(handlerSegmentControl), for: .valueChanged)
+        return segment
+    }()
+    
+    var containerHeighContraint: NSLayoutConstraint?
+    var nameTfHeighConstraint: NSLayoutConstraint?
+    var emailTfHeighConstraint: NSLayoutConstraint?
+    var passTfHeighConstraint: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 61/255, green: 91/255, blue: 151/255, alpha: 1)
         
         view.addSubview(inputContainerView)
         view.addSubview(registerBtn)
+        view.addSubview(segmentedControl)
         
         setupInputsContainerView()
         setupInputsRegisterBtn()
+        setupSegmentControl()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -87,6 +102,57 @@ class LoginController: UIViewController {
 
 
 extension LoginController {
+    
+    @objc private func handlerLoginRegister() {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            handlerLogin()
+        } else {
+            handlerRegister()
+        }
+    }
+    
+    private func handlerLogin() {
+        print("login")
+        Auth.auth().signIn(withEmail: emailTf.text!, password: passTf.text!) { (result, err) in
+            if let err = err {
+                print(err)
+            }
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    private func handlerRegister() {
+        print("register")
+        btnRegisterTouched()
+    }
+    
+    @objc private func handlerSegmentControl() {
+        let title = segmentedControl.titleForSegment(at: segmentedControl.selectedSegmentIndex)
+        registerBtn.setTitle(title, for: .normal)
+        //setup contraint
+        print(segmentedControl.selectedSegmentIndex)
+        containerHeighContraint?.constant = segmentedControl.selectedSegmentIndex == 0 ? 100 : 150
+        //name constraints
+        nameTfHeighConstraint?.isActive = false
+        nameTfHeighConstraint = nameTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: segmentedControl.selectedSegmentIndex == 0 ? 0 : 1/3)
+        nameTfHeighConstraint?.isActive = true
+        //email constraint
+        emailTfHeighConstraint?.isActive = false
+        emailTfHeighConstraint = emailTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: segmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        emailTfHeighConstraint?.isActive = true
+        //pass constraint
+        passTfHeighConstraint?.isActive = false
+        passTfHeighConstraint = passTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: segmentedControl.selectedSegmentIndex == 0 ? 1/2 : 1/3)
+        passTfHeighConstraint?.isActive = true
+    }
+    
+    private func setupSegmentControl() {
+        segmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        segmentedControl.bottomAnchor.constraint(equalTo: inputContainerView.topAnchor, constant: -10).isActive = true
+        segmentedControl.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
+        segmentedControl.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
+    
     private func setupInputsContainerView() {
         inputContainerView.addSubview(nameTf)
         inputContainerView.addSubview(nameSeperator)
@@ -103,7 +169,8 @@ extension LoginController {
         inputContainerView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         inputContainerView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         inputContainerView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1, constant: -32).isActive = true
-        inputContainerView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        containerHeighContraint = inputContainerView.heightAnchor.constraint(equalToConstant: 150)
+        containerHeighContraint?.isActive = true
     }
     
     private func setupInputsRegisterBtn() {
@@ -117,21 +184,24 @@ extension LoginController {
         nameTf.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor, constant: 12).isActive = true
         nameTf.topAnchor.constraint(equalTo: inputContainerView.topAnchor, constant: 0).isActive = true
         nameTf.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
-        nameTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3).isActive = true
+        nameTfHeighConstraint = nameTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3)
+        nameTfHeighConstraint?.isActive = true
     }
     
     private func setupInputEmailTf() {
         emailTf.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor, constant: 12).isActive = true
         emailTf.topAnchor.constraint(equalTo: nameTf.bottomAnchor, constant: 0).isActive = true
         emailTf.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
-        emailTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3).isActive = true
+        emailTfHeighConstraint = emailTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3)
+        emailTfHeighConstraint?.isActive = true
     }
     
     private func setupInputPasswordTf() {
         passTf.leftAnchor.constraint(equalTo: inputContainerView.leftAnchor, constant: 12).isActive = true
         passTf.topAnchor.constraint(equalTo: emailTf.bottomAnchor, constant: 0).isActive = true
         passTf.widthAnchor.constraint(equalTo: inputContainerView.widthAnchor).isActive = true
-        passTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3).isActive = true
+        passTfHeighConstraint = passTf.heightAnchor.constraint(equalTo: inputContainerView.heightAnchor, multiplier: 1/3)
+        passTfHeighConstraint?.isActive = true
     }
     
     private func setupNameSeperator() {
@@ -148,7 +218,7 @@ extension LoginController {
         emailSeperator.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     
-    @objc private func btnRegisterTouched() {
+    private func btnRegisterTouched() {
         print("registered")
         Auth.auth().createUser(withEmail: emailTf.text!, password: passTf.text!) { (user, err) in
             if let error = err {
@@ -163,6 +233,7 @@ extension LoginController {
             let childRef = ref.child("users").child(uid)
             let value = ["name": self.nameTf.text!, "email": self.emailTf.text!, "password": self.passTf.text!]
             childRef.updateChildValues(value)
+            self.dismiss(animated: true, completion: nil)
         }
         
     }

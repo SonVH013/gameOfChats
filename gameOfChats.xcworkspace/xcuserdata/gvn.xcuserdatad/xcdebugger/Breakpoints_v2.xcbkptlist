@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "gameOfChats/Controller/LoginController.swift"
+            timestampString = "553075896.738408"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
+            landmarkName = "btnRegisterTouched()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "gameOfChats.LoginController.(btnRegisterTouched in _761E30AD6D88992CAAA8624D67AA0169)() -&gt; ()"
+                  moduleName = "gameOfChats"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gvn/Desktop/gameOfChats/gameOfChats/Controller/LoginController.swift"
+                  timestampString = "553075896.747716"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "223"
+                  endingLineNumber = "223"
+                  offsetFromSymbolStart = "243">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;__ObjC.AuthDataResult&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in gameOfChats.LoginController.(btnRegisterTouched in _761E30AD6D88992CAAA8624D67AA0169)() -&gt; ()"
+                  moduleName = "gameOfChats"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/gvn/Desktop/gameOfChats/gameOfChats/Controller/LoginController.swift"
+                  timestampString = "553075896.753432"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "224"
+                  endingLineNumber = "224"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
