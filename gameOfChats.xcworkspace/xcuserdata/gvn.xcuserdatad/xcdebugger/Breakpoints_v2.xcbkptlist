@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "gameOfChats/Controller/LoginController.swift"
-            timestampString = "553075896.738408"
+            timestampString = "553169797.551661"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "223"
@@ -26,7 +26,7 @@
                   moduleName = "gameOfChats"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/gvn/Desktop/gameOfChats/gameOfChats/Controller/LoginController.swift"
-                  timestampString = "553075896.747716"
+                  timestampString = "553169797.8292201"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "223"
@@ -41,7 +41,7 @@
                   moduleName = "gameOfChats"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/gvn/Desktop/gameOfChats/gameOfChats/Controller/LoginController.swift"
-                  timestampString = "553075896.753432"
+                  timestampString = "553169797.832531"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "224"
@@ -49,6 +49,16 @@
                   offsetFromSymbolStart = "24">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.ExceptionBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            scope = "0"
+            stopOnStyle = "0">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
