@@ -14,6 +14,7 @@
 		9030F6C520F5F7A40084AB58 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9030F6C420F5F7A40084AB58 /* Assets.xcassets */; };
 		9030F6C820F5F7A40084AB58 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9030F6C620F5F7A40084AB58 /* LaunchScreen.storyboard */; };
 		9030F6D120F5FA430084AB58 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9030F6D020F5FA430084AB58 /* LoginController.swift */; };
+		90820D2F20FF30DA00F44CD9 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90820D2E20FF30DA00F44CD9 /* Extension.swift */; };
 		90AF437220F8948F000371ED /* NewMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AF437120F8948F000371ED /* NewMessageViewController.swift */; };
 		90AF437420F89E15000371ED /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90AF437320F89E15000371ED /* User.swift */; };
 		F889526337C5FBF9BE470039 /* Pods_gameOfChats.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA87D3592AB2FE1A9C74896C /* Pods_gameOfChats.framework */; };
@@ -30,6 +31,7 @@
 		9030F6C720F5F7A40084AB58 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9030F6C920F5F7A40084AB58 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9030F6D020F5FA430084AB58 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		90820D2E20FF30DA00F44CD9 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		90AF437120F8948F000371ED /* NewMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageViewController.swift; sourceTree = "<group>"; };
 		90AF437320F89E15000371ED /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		BC26EDD2CEB48E2AF2BD6681 /* Pods-gameOfChats.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gameOfChats.debug.xcconfig"; path = "Pods/Target Support Files/Pods-gameOfChats/Pods-gameOfChats.debug.xcconfig"; sourceTree = "<group>"; };
@@ -86,6 +88,8 @@
 		9030F6BC20F5F7A30084AB58 /* gameOfChats */ = {
 			isa = PBXGroup;
 			children = (
+				90820D3020FF44A600F44CD9 /* Model */,
+				90820D2D20FF30C000F44CD9 /* Helper */,
 				9030F6CF20F5FA2A0084AB58 /* Controller */,
 				9030F6BD20F5F7A30084AB58 /* AppDelegate.swift */,
 				9030F6C120F5F7A30084AB58 /* Main.storyboard */,
@@ -100,12 +104,27 @@
 		9030F6CF20F5FA2A0084AB58 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				9030F6BF20F5F7A30084AB58 /* MessageController.swift */,
 				9030F6D020F5FA430084AB58 /* LoginController.swift */,
+				9030F6BF20F5F7A30084AB58 /* MessageController.swift */,
 				90AF437120F8948F000371ED /* NewMessageViewController.swift */,
-				90AF437320F89E15000371ED /* User.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		90820D2D20FF30C000F44CD9 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				90820D2E20FF30DA00F44CD9 /* Extension.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		90820D3020FF44A600F44CD9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				90AF437320F89E15000371ED /* User.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -230,6 +249,7 @@
 				9030F6C020F5F7A30084AB58 /* MessageController.swift in Sources */,
 				9030F6D120F5FA430084AB58 /* LoginController.swift in Sources */,
 				9030F6BE20F5F7A30084AB58 /* AppDelegate.swift in Sources */,
+				90820D2F20FF30DA00F44CD9 /* Extension.swift in Sources */,
 				90AF437420F89E15000371ED /* User.swift in Sources */,
 				90AF437220F8948F000371ED /* NewMessageViewController.swift in Sources */,
 			);

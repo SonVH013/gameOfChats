@@ -12,6 +12,19 @@ import Firebase
 
 class LoginController: UIViewController {
     
+    lazy var profileImageView: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "profile")
+        img.contentMode = .scaleAspectFill
+        img.translatesAutoresizingMaskIntoConstraints = false
+        img.layer.cornerRadius = 20
+        img.layer.masksToBounds = true
+        
+        img.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handlerProfileSelect)))
+        img.isUserInteractionEnabled = true
+        return img
+    }()
+    
     let inputContainerView: UIView = {
         let inputContainerView = UIView()
         inputContainerView.backgroundColor = UIColor.white
@@ -89,7 +102,9 @@ class LoginController: UIViewController {
         view.addSubview(inputContainerView)
         view.addSubview(registerBtn)
         view.addSubview(segmentedControl)
+        view.addSubview(profileImageView)
         
+        setupProfileImageView()
         setupInputsContainerView()
         setupInputsRegisterBtn()
         setupSegmentControl()
@@ -101,7 +116,35 @@ class LoginController: UIViewController {
 }
 
 
-extension LoginController {
+extension LoginController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    @objc private func handlerProfileSelect() {
+        print("profile select")
+        let picker = UIImagePickerController()
+        picker.delegate = self
+        picker.allowsEditing = true
+        present(picker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        var selectedImage: UIImage?
+        if let editedImg = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            selectedImage = editedImg
+        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            selectedImage = originalImage
+        }
+        if let selectedImage = selectedImage {
+            profileImageView.image = selectedImage
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    private func setupProfileImageView() {
+        profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        profileImageView.bottomAnchor.constraint(equalTo: segmentedControl.topAnchor, constant: -20).isActive = true
+        profileImageView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    }
     
     @objc private func handlerLoginRegister() {
         if segmentedControl.selectedSegmentIndex == 0 {
@@ -223,18 +266,45 @@ extension LoginController {
         Auth.auth().createUser(withEmail: emailTf.text!, password: passTf.text!) { (user, err) in
             if let error = err {
                 print(error)
+                return
             }
-            //save to db
-            var uid = ""
-            let ref = Database.database().reference(fromURL: "https://gameofchats-dcb8a.firebaseio.com/")
-            if let user = Auth.auth().currentUser {
-                uid = user.uid
+            guard let uid =  user?.user.uid else {
+                return
             }
-            let childRef = ref.child("users").child(uid)
-            let value = ["name": self.nameTf.text!, "email": self.emailTf.text!, "password": self.passTf.text!]
-            childRef.updateChildValues(value)
-            self.dismiss(animated: true, completion: nil)
+            let uploadData = UIImagePNGRepresentation(self.profileImageView.image!)
+            let storage = Storage.storage().reference().child("myImages").child("\(UUID.init()).png")
+            storage.putData(uploadData!, metadata: nil, completion: { (metadata, error) in
+                if error != nil {
+                    print(error)
+                    return
+                }
+                guard let metadata = metadata else {
+                    return
+                }
+                storage.downloadURL(completion: { (url, error) in
+                    if let err = err{
+                        print("Unable to retrieve URL due to error: \(err.localizedDescription)")
+                    }
+                    if let url = url?.absoluteString {
+                        let values = ["name": self.nameTf.text!, "email": self.emailTf.text!, "password": self.passTf.text!, "profileImageUrl": url]
+                        self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
+                    }
+                })
+            })
         }
         
+    }
+    
+    private func registerUserIntoDatabaseWithUID(_ uid: String, values: [String: AnyObject]) {
+        let ref = Database.database().reference()
+        let usersReference = ref.child("users").child(uid)
+        
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            if let err = err {
+                print(err)
+                return
+            }
+            self.dismiss(animated: true, completion: nil)
+        })
     }
 }
