@@ -12,6 +12,8 @@ import Firebase
 
 class LoginController: UIViewController {
     
+    var messageController: MessageController?
+    
     lazy var profileImageView: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "profile")
@@ -156,9 +158,13 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     
     private func handlerLogin() {
         print("login")
-        Auth.auth().signIn(withEmail: emailTf.text!, password: passTf.text!) { (result, err) in
+        guard let email = emailTf.text, let password = passTf.text else {
+            return
+        }
+        Auth.auth().signIn(withEmail: email, password: password) { (result, err) in
             if let err = err {
                 print(err)
+                return
             }
             self.dismiss(animated: true, completion: nil)
         }
@@ -262,8 +268,10 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
     }
     
     private func btnRegisterTouched() {
-        print("registered")
-        Auth.auth().createUser(withEmail: emailTf.text!, password: passTf.text!) { (user, err) in
+        guard let email = emailTf.text, let password = passTf.text else {
+            return
+        }
+        Auth.auth().createUser(withEmail: email, password: password) { (user, err) in
             if let error = err {
                 print(error)
                 return
@@ -273,6 +281,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             }
             let uploadData = UIImagePNGRepresentation(self.profileImageView.image!)
             let storage = Storage.storage().reference().child("myImages").child("\(UUID.init()).png")
+            
             storage.putData(uploadData!, metadata: nil, completion: { (metadata, error) in
                 if error != nil {
                     print(error)
@@ -304,6 +313,8 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 print(err)
                 return
             }
+            
+            self.messageController?.fetchUserAndSetupNavBarTitle()
             self.dismiss(animated: true, completion: nil)
         })
     }

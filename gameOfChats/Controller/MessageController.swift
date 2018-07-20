@@ -13,14 +13,9 @@ class MessageController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(btnBackTouched))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(handlerLogout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New message", style: .plain, target: self, action: #selector(handlerNewMessage))
         checkIfUserIsLoggedIn()
-    }
-    
-    @objc private func btnBackTouched() {
-        let loginVC = LoginController()
-        self.present(loginVC, animated: true, completion: nil)
     }
     
     @objc private func handlerLogout() {
@@ -30,6 +25,7 @@ class MessageController: UITableViewController {
             print(error)
         }
         let loginVC = LoginController()
+        loginVC.messageController = self
         self.present(loginVC, animated: true, completion: nil)
     }
     
@@ -43,15 +39,23 @@ class MessageController: UITableViewController {
         if Auth.auth().currentUser?.uid == nil {
             perform(#selector(handlerLogout), with: nil, afterDelay: 0)
         } else {
-            let uid = Auth.auth().currentUser?.uid
-            Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value) { (dataSnapshot) in
-                print(dataSnapshot)
-                if let dict = dataSnapshot.value as? [String:AnyObject] {
-                    self.navigationItem.title = dict["name"] as? String
-                }
-            }
+            fetchUserAndSetupNavBarTitle()
             
         }
+    }
+    
+    func fetchUserAndSetupNavBarTitle() {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            //for some reason uid = nil
+            return
+        }
+        print("uid \(uid)")
+        Database.database().reference().child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let user = User(dictionary: dictionary)
+                self.navigationItem.title = dictionary["name"] as? String
+            }
+        }, withCancel: nil)
     }
 }
 
