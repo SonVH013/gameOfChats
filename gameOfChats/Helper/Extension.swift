@@ -12,6 +12,7 @@ import UIKit
 let imageCache = NSCache<NSString, UIImage>()
 
 extension UIImageView {
+    
     func loadImageUsingCache(urlString: String) {
         self.image = nil
         //check cache

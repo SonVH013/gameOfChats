@@ -166,6 +166,7 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
                 print(err)
                 return
             }
+            self.messageController?.fetchUserAndSetupNavBarTitle()
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -279,27 +280,28 @@ extension LoginController: UIImagePickerControllerDelegate, UINavigationControll
             guard let uid =  user?.user.uid else {
                 return
             }
-            let uploadData = UIImagePNGRepresentation(self.profileImageView.image!)
-            let storage = Storage.storage().reference().child("myImages").child("\(UUID.init()).png")
-            
-            storage.putData(uploadData!, metadata: nil, completion: { (metadata, error) in
-                if error != nil {
-                    print(error)
-                    return
-                }
-                guard let metadata = metadata else {
-                    return
-                }
-                storage.downloadURL(completion: { (url, error) in
-                    if let err = err{
-                        print("Unable to retrieve URL due to error: \(err.localizedDescription)")
+            //let uploadData = UIImagePNGRepresentation(self.profileImageView.image!)
+            if let uploadData = UIImageJPEGRepresentation(self.profileImageView.image!, 0.1) {
+                let storage = Storage.storage().reference().child("myImages").child("\(UUID.init()).png")
+                storage.putData(uploadData, metadata: nil, completion: { (metadata, error) in
+                    if error != nil {
+                        print(error)
+                        return
                     }
-                    if let url = url?.absoluteString {
-                        let values = ["name": self.nameTf.text!, "email": self.emailTf.text!, "password": self.passTf.text!, "profileImageUrl": url]
-                        self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
+                    guard let metadata = metadata else {
+                        return
                     }
+                    storage.downloadURL(completion: { (url, error) in
+                        if let err = err{
+                            print("Unable to retrieve URL due to error: \(err.localizedDescription)")
+                        }
+                        if let url = url?.absoluteString {
+                            let values = ["name": self.nameTf.text!, "email": self.emailTf.text!, "password": self.passTf.text!, "profileImageUrl": url]
+                            self.registerUserIntoDatabaseWithUID(uid, values: values as [String : AnyObject])
+                        }
+                    })
                 })
-            })
+            }
         }
         
     }
