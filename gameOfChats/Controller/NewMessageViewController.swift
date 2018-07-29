@@ -26,6 +26,7 @@ class NewMessageViewController: UITableViewController {
             print(snapshot)
             if let dict = snapshot.value as? [String: AnyObject] {
                 let user = User(dictionary: dict)
+                user.id = snapshot.key
                 self.users.append(user)
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -43,7 +44,7 @@ class NewMessageViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 56
+        return 72
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -54,6 +55,14 @@ class NewMessageViewController: UITableViewController {
             cell.profileImageView.loadImageUsingCache(urlString: imgLink)
         }
         return cell
+    }
+    
+    var messageController: MessageController?
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        dismiss(animated: true, completion: nil)
+        let user = users[indexPath.row]
+        self.messageController?.showChatController(user: user)
     }
     
 }
@@ -76,7 +85,6 @@ class UserCell: UITableViewCell {
         super.init(style: .subtitle, reuseIdentifier: "CellId")
         addSubview(profileImageView)
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        
         profileImageView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
         profileImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
         profileImageView.widthAnchor.constraint(equalToConstant: 40).isActive = true

@@ -16,6 +16,25 @@ class MessageController: UITableViewController {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(handlerLogout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New message", style: .plain, target: self, action: #selector(handlerNewMessage))
         checkIfUserIsLoggedIn()
+        observerMessage()
+    }
+    
+    var messages = [Message]()
+    
+    func observerMessage() {
+        let ref = Database.database().reference(withPath: "messages")
+        ref.observe(.childAdded, with: { (snapshot) in
+            print(snapshot)
+            if let dictionary = snapshot.value as? [String: AnyObject] {
+                let message = Message(dictionary: dictionary)
+                self.messages.append(message)
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                print("text: \(message.text)")
+            }
+        }, withCancel: nil)
     }
     
     @objc private func handlerLogout() {
@@ -31,6 +50,7 @@ class MessageController: UITableViewController {
     
     @objc func handlerNewMessage() {
         let newMessController = NewMessageViewController()
+        newMessController.messageController = self
         let naviController = UINavigationController(rootViewController: newMessController)
         present(naviController, animated: true, completion: nil)
     }
@@ -61,9 +81,9 @@ class MessageController: UITableViewController {
     
     func setupNavbarWithUser(user: User) {
         self.navigationItem.title = user.name
-        let titleView = UIView()
+        let titleView = UIButton()
         titleView.frame = CGRect(x: 0, y: 0, width: 80, height: 40)
-        titleView.backgroundColor = UIColor.blue
+        //titleView.backgroundColor = UIColor.blue
         
         let profileImageView = UIImageView()
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -81,6 +101,27 @@ class MessageController: UITableViewController {
         profileImageView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         self.navigationItem.titleView = titleView
+        //titleView.addTarget(self, action: #selector(showChatController), for: .touchUpInside)
+        
+    }
+    
+    @objc func showChatController(user: User) {
+        print("123")
+        let vc = ChatLogController(collectionViewLayout: UICollectionViewLayout())
+        vc.user = user
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return messages.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellId")
+        let message = messages[indexPath.row]
+        cell.textLabel?.text  = message.toId
+        cell.detailTextLabel?.text = message.text
+        return cell
     }
 }
 
