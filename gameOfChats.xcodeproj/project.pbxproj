@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C5CD71E2118A5020076733D /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5CD71D2118A5020076733D /* UserCell.swift */; };
 		2CA1F063210DBC6D00650E44 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1F062210DBC6D00650E44 /* ChatLogController.swift */; };
 		2CA1F086210E148A00650E44 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CA1F085210E148A00650E44 /* Message.swift */; };
 		902E2EBD20F6EC8D00D7A486 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 902E2EBC20F6EC8D00D7A486 /* GoogleService-Info.plist */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C5CD71D2118A5020076733D /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		2CA1F062210DBC6D00650E44 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		2CA1F085210E148A00650E44 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		5D81A085F8FE4B43317BC30E /* Pods-gameOfChats.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gameOfChats.release.xcconfig"; path = "Pods/Target Support Files/Pods-gameOfChats/Pods-gameOfChats.release.xcconfig"; sourceTree = "<group>"; };
@@ -54,6 +56,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C5CD71C2118A3350076733D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2C5CD71D2118A5020076733D /* UserCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		33FB004101AB3A89AC5DFD1A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +102,7 @@
 		9030F6BC20F5F7A30084AB58 /* gameOfChats */ = {
 			isa = PBXGroup;
 			children = (
+				2C5CD71C2118A3350076733D /* Views */,
 				90820D3020FF44A600F44CD9 /* Model */,
 				90820D2D20FF30C000F44CD9 /* Helper */,
 				9030F6CF20F5FA2A0084AB58 /* Controller */,
@@ -259,6 +270,7 @@
 				90820D2F20FF30DA00F44CD9 /* Extension.swift in Sources */,
 				2CA1F086210E148A00650E44 /* Message.swift in Sources */,
 				90AF437420F89E15000371ED /* User.swift in Sources */,
+				2C5CD71E2118A5020076733D /* UserCell.swift in Sources */,
 				90AF437220F8948F000371ED /* NewMessageViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

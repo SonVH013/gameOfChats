@@ -10,16 +10,21 @@ import UIKit
 import Firebase
 
 class MessageController: UITableViewController {
+    
+    let cellId = "cellId"
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(handlerLogout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "New message", style: .plain, target: self, action: #selector(handlerNewMessage))
         checkIfUserIsLoggedIn()
+        
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         observerMessage()
     }
     
     var messages = [Message]()
+    var messageDict = [String: Message]()
     
     func observerMessage() {
         let ref = Database.database().reference(withPath: "messages")
@@ -27,8 +32,14 @@ class MessageController: UITableViewController {
             print(snapshot)
             if let dictionary = snapshot.value as? [String: AnyObject] {
                 let message = Message(dictionary: dictionary)
-                self.messages.append(message)
-                
+                //self.messages.append(message)
+                if let toId = message.toId {
+                    self.messageDict[toId] = message
+                    self.messages = Array(self.messageDict.values)
+                    self.messages.sort(by: { (message1, message2) -> Bool in
+                        return message1.timeStamp!.intValue < message2.timeStamp!.intValue
+                    })
+                }
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
@@ -117,10 +128,27 @@ class MessageController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellId")
+        //let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "cellId")
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         let message = messages[indexPath.row]
-        cell.textLabel?.text  = message.toId
+        if let toId = message.toId {
+            let ref = Database.database().reference().child("users").child(toId)
+            ref.observeSingleEvent(of: .value, with: { (snapshot) in
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    cell.textLabel?.text = dictionary["name"] as? String
+                    if let profileImageUrl = dictionary["profileImageUrl"] as? String{
+                        cell.profileImageView.loadImageUsingCache(urlString: profileImageUrl)
+                    }
+                }
+            }, withCancel: nil)
+        }
         cell.detailTextLabel?.text = message.text
+        if let seconds = message.timeStamp?.doubleValue {
+            let date = Date(timeIntervalSince1970: seconds)
+            let dateFormat = DateFormatter()
+            dateFormat.dateFormat = "hh:mm:ss"
+            cell.timeLabel.text = dateFormat.string(from: date)
+        }
         return cell
     }
 }
